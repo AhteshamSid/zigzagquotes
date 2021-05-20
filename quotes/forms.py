@@ -3,13 +3,14 @@ from django import forms
 from .models import Quote, Category, Comment
 
 choices = Category.objects.all().values_list('name', 'name')
+choice_list = [('Popular Quote','Popular Quote'), ('Learned', 'Learned'), ('Life', 'Life'), ('Motivational', 'Motivational'), ('Excited', 'Excited'), ('Confident', 'Confident'), ('Goal', 'Goal'), ('Healthy', 'Healthy'), ('Inspiration', 'Inspiration'), ('Enemies and forgiveness', 'Enemies and forgiveness'), ('Future', 'Future')]
 
-choice_list = []
-for item in choices:
-    choice_list.append(item)
-for x in Quote.objects.values("category").distinct().values_list('category', 'category'):
-    if x not in choices:
-        choice_list.append(x)
+# choice_list = []
+# for item in choices:
+#     choice_list.append(item)
+# for x in Quote.objects.values("category").distinct().values_list('category', 'category'):
+#     if x not in choices:
+#         choice_list.append(x)
 
 
 class AddQuotesForm(forms.ModelForm):
