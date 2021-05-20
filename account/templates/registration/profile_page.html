@@ -1,0 +1,94 @@
+{% extends "home_layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+<!--@import url(https://fonts.googleapis.com/css?family=Roboto:900,300);-->
+.footer, .liked {
+  max-width: 500px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+.image{
+  vertical-align: middle;
+  width: 230px;
+  height: 330px;
+  border-radius: 50%;
+}
+.content {
+  width: 400px;
+  margin: 40px auto 40px;
+  background-color: #fff;
+  padding: 0 20px 20px;
+  border-radius: 6px;
+  text-align: center;
+}
+.name {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+}
+.bio,.dob {
+  font-size: 16px;
+  line-height: 26px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+</style>
+    {% if query.profile_pic %}
+            <img class="image" src="{{query.profile_pic.url}}">&ensp;
+                {% else %}<img class="image" src="{% static 'profile.png' %}">
+    {% endif %}
+    {% if query.user.first_name %}
+        <h2 class="name">{{query.user.first_name}} {{query.user.last_name}}</h2>
+    {% else %}
+        <h2 class="name">{{query.user}}</h2>
+    {% endif %}
+    <p class="dob">
+        {% if query.date_of_birth %}
+            {{query.date_of_birth}}<br>
+        {% endif %}
+        {{query.bio}}<br>
+        {% if query.facebook_url %}
+            <button><a href="{{query.facebook_url}}" target="_blank" rel="noopener noreferrer">Facebook</a></button> |
+        {% endif %}
+        {% if query.youtube_url %}
+            <button><a href="{{query.youtube_url}}" target="_blank" rel="noopener noreferrer">Youtube</a></button> |
+        {% endif %}
+        {% if query.twitter_url %}
+            <button><a href="{{query.twitter_url}}" target="_blank" rel="noopener noreferrer">Twitter</a></button> |
+        {% endif %}
+        {% if query.linkedin_url %}
+            <button><a href="{{query.linkedin_url}}" target="_blank" rel="noopener noreferrer">Linkedin</a></button> |
+        {% endif %}
+        {% if query.instagram_url %}
+        <button><a href="{{query.instagram_url}}" target="_blank" rel="noopener noreferrer">Instagram</a></button> |
+        {% endif %}
+    </p>
+    {% if query.user == user %}
+        <br><button><a href="{% url 'edit_profile' %}">Edit Profile</a></button>
+        <button><a href="{% url 'user_delete' user.pk %}"> Delete Account</a></button>
+    {% endif %}
+{% endblock %}
+
+
+<br><br>
+{% block footer %}
+<h1>Related Quotes by User</h1><br>
+{% if post_len > 0 %}
+    {% for post in post %}
+    {% if post.title %}
+              <blockquote >{{post.body|safe}}</blockquote>
+              <h4>title: <a  href="{% url 'quotes:quote_detail' post.pk post.category|slugify %}">{{post.title|safe}}</a></h4>
+              <form action="{% url 'quotes:quote_like' post.pk %}" method ="POST" style="text-align:right;">
+                   {% csrf_token %}
+                   <input type="submit" value="Like&#9829;">
+              </form><br>
+    {% endif %}
+         {% endfor %}
+{% else %}
+    <p>No Post Created............</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "home_layout.html" %}
+{% load static %}
+{% block content %}
+<style>
+.content ,.footer {
+  max-width: 500px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+.image{
+  vertical-align: middle;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+</style>
+    <h1>{{quote.title|safe}}</h1><br>
+    <h3>{{quote.body|safe}}</h3>
+        <form action="{% url 'quotes:quote_like' quote.pk %}" method ="POST" style="text-align:right;">
+               {% csrf_token %}
+        {% if liked %}
+            <input type="submit" name="quote_id" value="Like&#9829;" style="color:red;">
+        {% else %}
+            <input type="submit" name="quote_id" value="Like&#9829;" >
+        {% endif %}&ensp;{{total_likes}} likes
+        </form><br>
+    <a href="{% url 'quotes:categories' quote.category|slugify %}" >{{quote.category|safe}}</a>
+    <small> Published {{quote.time }} by </small>
+            {% if quote.author.profile.profile_pic %}
+            <img class="image" src="{{quote.author.profile.profile_pic.url}}">
+                {% else %}<img class="image" src="{% static 'profile.png' %}">
+            {% endif %}
+             <a  href="{% url 'profile_page' quote.author.profile.id %}">{{quote.author|capfirst}}</a>&ensp;
+    {% if quote.author == user %}
+              <button><small ><a href="{% url 'quotes:quote_update' quote.pk %}" style="color:black;">edit&nbsp;</a></small></button>&ensp;&ensp;
+              <button><small ><a href="{% url 'quotes:quote_delete' quote.pk %}" style="color:black;"> delete</a></small></button>
+    {% endif %}
+<br><button><a href="{% url 'quotes:home' %}" style="color:black;">Back</a></button>
+{% endblock %}
+
+{% block footer %}
+<h1>Related Quotes by User</h1><br><br>
+{% if post1 == 1 %}
+<p>No More Post...........</p><br><br>
+{% else %}
+    {% for post in post %}
+        {% if post.title != quote.title %}
+                  <blockquote >{{post.body|safe}}</blockquote>
+                  <h4>title: <a  href="{% url 'quotes:quote_detail' post.pk post.category|slugify %}">{{post.title|safe}}</a></h4>
+                  <form action="{% url 'quotes:quote_like' post.pk %}" method ="POST" style="text-align:right;">
+                       {% csrf_token %}
+                       <input type="submit" value="Like&#9829;">
+                  </form><br>
+        {% endif %}
+         {% endfor %}
+{% endif %}
+{% endblock %}

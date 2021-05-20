@@ -1,0 +1,177 @@
+{% extends "home_layout.html" %}
+{% load static %}
+
+{% block search %}
+<style>
+.form1 input{
+  border-radius: 10px;
+  border-style: solid;
+  color: black;
+  background-color: white;
+  margin-left: 10px;
+}
+.form1 label{
+   display:none;
+}
+</style>
+<form class="form1" method ="GET" action="." style="text-align:right;">
+     {% csrf_token %}
+     {{search.form}}
+<input type="submit" value="Search">
+</form><br>
+{% endblock %}
+
+{% block category %}
+<style>
+.category {
+  max-width: 420px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+button{
+  border-radius: 10px;
+  border-style: solid;
+  color: black;
+  background-color: white;
+  margin-left: 10px;
+}
+.dropdown-content, .dropdown-content-reply {
+   display: none;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-reply:hover .dropdown-content-reply {
+  display: block;
+}
+</style>
+<div class="dropdown">
+     <h1 style="color:blue; text-align: center;">Select Categories({{categories.count}})</h1>
+  <div class="dropdown-content">
+     {% for quote in categories %}
+        <button><a href="{% url 'quotes:categories' quote.category|slugify %}" >{{quote.category|capfirst}}</a></button>&ensp;
+     {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+.content, .footer {
+  max-width: 420px;
+  margin: auto;
+  border: 3px solid #f1f1f1;a
+}
+.image{
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+@media (max-width: 858px){
+  .category, .content, .footer{
+  max-width: 100%;
+  }}
+</style>
+     <h1>ZigZag Quotes-{{search.qs.count}}</h1><br>
+{% if search.qs %}
+     {% for quote in search.qs %}
+          <blockquote >{{quote.body|safe}}</blockquote>
+          <h4 style="float:left">title: <a  href="{% url 'quotes:quote_detail' quote.pk quote.category|slugify %}">{{quote.title|safe}}</a></h4>&ensp;
+              {% if quote.author.profile.profile_pic %}
+            <img class="image" src="{{quote.author.profile.profile_pic.url}}">
+                {% else %}<img class="image" src="{% static 'profile.png' %}">
+              {% endif %}&ensp;
+             <a  href="{% url 'profile_page' quote.author.profile.id %}">{{quote.author|capfirst}}</a>
+          <form action="{% url 'quotes:quote_like' quote.pk %}" method ="POST" style="text-align:right;">
+               {% csrf_token %}
+               <input type="submit" value="Like&#9829;">
+          </form><br>
+     {% endfor %}
+{% else %}
+    <p> Not Found.........</p>
+{% endif %}
+<!--{% if is_paginated %}-->
+<!--    <div style="text-align:right;">-->
+<!--        <b>Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</b>-->
+<!--        {% if page_obj.has_previous %}-->
+<!--        <button><a href="?page=1"> First</a> </button>-->
+<!--        <button><a href="?page={{page_obj.previous_page_number}}"> Previous</a> </button>-->
+<!--        {% endif %}-->
+<!--        {% if page_obj.has_next %}-->
+<!--        <button><a href="?page={{page_obj.next_page_number}}"> Next</a> </button>-->
+<!--        <button><a href="?page={{page_obj.paginator.num_pages}}"> Last</a> </button>-->
+<!--        {% endif %}-->
+<!--    </div>-->
+<!--{% endif %}-->
+{% endblock %}<br>
+
+{% block footer %}
+<div class="dropdown">
+    <h1 style="text-align: center;"><strong>Comments• {{ comment.count }} </strong></h1><br>
+     <div class="dropdown-content">
+         <div style="float:left;">
+    {% if request.user.is_authenticated %}
+            {% if user.profile.profile_pic %}<img class="image1" src="{{user.profile.profile_pic.url}}">
+            {% else %}<img class="image1" src="{% static 'profile.png' %}">
+            {% endif %}
+             {% else %}<img class="image1" src="{% static 'profile.png' %}">{% endif %}
+         </div>
+<div class="form1">
+        <form class="comment-blog" action="." method="post">
+            {{ form.as_p }}
+            {% csrf_token %}<br>{% if request.user.is_authenticated %}
+            <input type="submit" value="Add Comment!" style="border:none;margin-left: 50px;">
+    {% else %}
+            <button style="margin-left: 50px;"><a href="{% url 'login' %}" style="box-shadow:none; padding:0; background: none;">Add Comment!</a></button>
+    {% endif %}
+        </form>
+</div><br><br><br>
+{% for comment in comment %}
+
+    <strong>{{ comment.user|capfirst }}
+    <a  href="{% url 'profile_page' comment.user.profile.id %}" style="color: red; box-shadow:none; padding:0; background: none;">
+        {% if comment.user.profile.profile_pic %}
+            <img class="image" src="{{comment.user.profile.profile_pic.url}}">&ensp;
+            {% else %}<img class="image" src="{% static 'profile.png' %}">&ensp;
+        {% endif %}</a>
+    {{ comment.date_added }}<br></strong>
+    {{ comment.body }}
+<div class="dropdown-reply">
+    <h4 style="color:blue; text-align: center;"><strong>Reply({{ comment.replies.all.count }})</strong></h4><br>
+     <div class="dropdown-content-reply">
+         <div style="text-align:right;">
+    {% for comment in comment.replies.all %}
+    <strong>{{ comment.user|capfirst }}
+     <a  href="{% url 'profile_page' comment.user.profile.id %}" style="color: red; box-shadow:none; padding:0; background: none;">
+        {% if comment.user.profile.profile_pic %}
+            <img class="image" src="{{comment.user.profile.profile_pic.url}}">&ensp;
+            {% else %}<img class="image" src="{% static 'profile.png' %}">&ensp;
+         {% endif %}</a>
+    {{ comment.date_added }}<br></strong>
+    {{ comment.body }}<br><br>
+
+    {% endfor %}</div>
+    <div class="line" style="float:left; margin-left:140px;">
+    {% if request.user.is_authenticated %}
+            {% if user.profile.profile_pic %}<img class="image1" src="{{user.profile.profile_pic.url}}">
+            {% else %}<img class="image1" src="{% static 'profile.png' %}">
+            {% endif %}
+             {% else %}<img class="image1" src="{% static 'profile.png' %}">{% endif %}
+         </div>
+    <div class="form1 line" id="myForm" style="text-align:right;display:inline-block;">
+        <form class="reply-blog" action="." method="post">
+        {% csrf_token %}
+        {{ form.as_p }}{% if request.user.is_authenticated %}
+              <input type="hidden" name="parent_id" value="{{comment.id}}">
+            <input type="submit" value="reply!" style="border:none;margin-right: 10px;">
+    {% else %}
+            <button style="margin-right: 10px;"><a href="{% url 'login' %}" style="box-shadow:none; padding:0; background: none;">Reply!</a></button>
+    {% endif %}
+    </form></div><br><br>
+                 </div>
+        </div>
+    {% endfor %}
+     </div>
+</div>
+{% endblock %}

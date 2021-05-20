@@ -1,0 +1,49 @@
+{% extends "home_layout.html" %}
+{% block category %}
+<style>
+.category {
+  max-width: 420px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+button{
+  border-radius: 10px;
+  border-style: solid;
+  color: black;
+  background-color: white;
+  margin-left: 10px;
+}
+.dropdown-content {
+   display: none;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+</style>
+     <h1 style="color:blue; text-align: center;">Select Categories</h1>
+  <div class="dropdown-content">
+     {% for quote in category_list %}
+        <button><a href="{% url 'quotes:categories' quote.category|slugify %}" >{{quote.category|capfirst}}</a></button>&ensp;
+     {% endfor %}
+    </div>
+{% endblock %}
+
+{% block content %}
+<style>
+.content {
+  max-width: 420px;
+  margin: auto;
+  border: 3px solid #f1f1f1;a
+}
+</style>
+{% if categories %}
+    <h1>{{category}}</h1><br>
+    {% for quote in categories %}
+         <blockquote >{{quote.body}}</blockquote>
+         <h4>title: <a  href="{% url 'quotes:quote_detail' quote.pk quote.category|slugify %}">{{quote.title}}</a></h4><br>
+    {% endfor %}
+{% else %}
+    <h2>This Page Doesn't Exit</h2>
+{% endif %}
+
+{% endblock %}

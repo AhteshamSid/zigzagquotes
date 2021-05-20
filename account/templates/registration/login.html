@@ -1,0 +1,27 @@
+{% extends "home_layout.html" %}
+
+{% block content %}
+<style>
+.content {
+  max-width: 300px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+form ul li{
+    color:red;
+}
+</style>
+
+<h1>Log-in</h1>
+<div class="form">
+    <form action="{% url 'login' %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}"/>
+        <p><input type="submit" value="Login"></p><br>
+        <p><a href="{% url 'password_reset' %}">Forgot Password</a></p>
+        <p><a href="{% url 'register' %}">Create Account</a></p>
+    </form><br>
+
+</div>
+{% endblock %}

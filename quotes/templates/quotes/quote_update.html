@@ -1,0 +1,23 @@
+{% extends "home_layout.html" %}
+{% block content %}
+<style>
+.content {
+  max-width: 420px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+.errorlist {
+display: none;
+}
+</style>
+    <h1>Update Your Quote</h1>
+<div class="form">
+    <form action="{% url 'quotes:quote_update' quote.pk %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <br>
+        <input type="submit" value="Updated Quote!">
+    </form>
+</div>
+
+{% endblock %}

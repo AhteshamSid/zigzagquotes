@@ -1,0 +1,36 @@
+{% extends "home_layout.html" %}
+{% block content %}
+    <style>
+.content {
+  max-width: 420px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+.helptext {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+}
+#id_username:hover + span  {
+  visibility: visible;
+  baground: blue;
+  color: red;
+}
+form ul li{
+    color:red;
+}
+</style>
+    <h1>Register</h1>
+<div class="form">
+    <form  method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <br>
+        <input type="submit" value="Register!">
+    </form>
+</div>
+
+{% endblock %}

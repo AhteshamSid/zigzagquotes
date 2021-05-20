@@ -1,0 +1,50 @@
+{% extends "home_layout.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+.content {
+  max-width: 420px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+.errorlist {
+display: none;
+}
+.email-form, #id_profile_pic
+ {
+ margin-left: 20px;
+ padding: 15px 32px;
+ font-size: 16px;
+ background-color: white;
+}
+.form form span, #text, .form form p a, #id_password, label[for="id_password"], label[for="id_profile_pic"], label[for="profile_pic-clear_id"], #profile_pic-clear_id{
+display: none;
+}
+.image{
+  vertical-align: middle;
+  width: 230px;
+  height: 330px;
+  border-radius: 50%;
+}
+
+</style>
+    <h1>Edit Your Profile</h1>
+<div class="form">
+    <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data">
+        {{ user_form.as_p }}
+        {{ profile_form.media }}
+    <div><br><button style="margin-left: 20px; padding: 15px 32px;"><a href="{% url 'change_password' %}" >Change Your User Password</a></button></div><br>
+        <div style="text-align:center;" id="image">
+            {% if user.profile.profile_pic %}
+            <a href="{{user.profile.profile_pic.url}}"><img class="image" src="{{user.profile.profile_pic.url}}"></a>
+                {% else %}<img class="image" src="{% static 'profile.png' %}">
+            {% endif %}
+        </div><br>
+        {{ profile_form.as_p }}
+        {% csrf_token %}
+        <input type="submit" value="Save!">
+    </form>
+</div>
+
+{% endblock %}

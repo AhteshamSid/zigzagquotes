@@ -1,0 +1,23 @@
+{% extends "home_layout.html" %}
+{% block content %}
+<style>
+.content {
+  max-width: 420px;
+  margin: auto;
+  border: 3px solid #f1f1f1;
+}
+.errorlist {
+display: none;
+}
+</style>
+    <h1>Add Your Quote</h1>
+<div class="form">
+    <form action="{% url 'quotes:add_quotes' %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <br><div class='add-category' style="text-align:center;"><button><a href="{% url 'quotes:add_category' %}">Add Category</a></button></div><br>
+        <input type="submit" value="Add Quote!">
+    </form>
+</div>
+
+{% endblock %}
