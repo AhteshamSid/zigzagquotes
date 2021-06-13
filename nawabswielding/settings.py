@@ -141,15 +141,15 @@ LOGOUT_REDIRECT_URL = 'quotes:home'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mohammadahteshamsiddiqui@gmail.com'
-EMAIL_HOST_PASSWORD = 'ahteshamhaie'
+EMAIL_HOST_USER = '*********"""@gmail.com'
+EMAIL_HOST_PASSWORD = '†***********'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 AWS_ACCESS_KEY_ID = '**************************'
 AWS_SECRET_ACCESS_KEY = '********************************'
-AWS_STORAGE_BUCKET_NAME = 'nawabswielding'
-# AWS_S3_SIGNATURE_VERSION ='s3v4'
+AWS_STORAGE_BUCKET_NAME = '********'
+# AWS_S3_SIGNATURE_VERSION ='******'
 AWS_S3_REGION_NAME = "ap-south-1"
 
 AWS_DEFAULT_ACL = None
